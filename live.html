@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Nivo Live Kaart</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+    .popup {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  </style>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <script>
+    const API_URL = "https://nivo-backend.onrender.com/api/live";
+    const REFRESH_MS = 3000;
+    const DEFAULT_CENTER = [53.1642, 6.7611];
+
+    let map;
+    let markers = {};
+
+    function initMap() {
+      map = L.map("map").setView(DEFAULT_CENTER, 12);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap"
+      }).addTo(map);
+
+      fetchLiveData();
+      setInterval(fetchLiveData, REFRESH_MS);
+    }
+
+    async function fetchLiveData() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        updateMarkers(data);
+      } catch (err) {
+        console.error("Fout bij ophalen live data:", err);
+      }
+    }
+
+    function updateMarkers(duiven) {
+      const now = Date.now();
+
+      duiven.forEach(d => {
+        const ageSec = (now - d.timestamp) / 1000;
+
+        let color = "green";
+        if (ageSec > 600) color = "red";
+        else if (ageSec > 120) color = "yellow";
+
+        if (!d.lat || !d.lng) return;
+
+        const pos = [d.lat, d.lng];
+
+        if (markers[d.tag_id]) {
+          markers[d.tag_id].setLatLng(pos);
+          markers[d.tag_id].setStyle({ fillColor: color });
+        } else {
+          const marker = L.circleMarker(pos, {
+            radius: 8,
+            fillColor: color,
+            fillOpacity: 0.9,
+            color: "#333",
+            weight: 1
+          }).addTo(map);
+
+          marker.bindPopup(`
+            <div class="popup">
+              <strong>${d.duif}</strong><br>
+              Eigenaar: ${d.eigenaar}<br>
+              Scanner: ${d.scanner_id}<br>
+              RSSI: ${d.rssi}<br>
+              Tijd: ${new Date(d.timestamp).toLocaleTimeString()}
+            </div>
+          `);
+
+          markers[d.tag_id] = marker;
+        }
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>
