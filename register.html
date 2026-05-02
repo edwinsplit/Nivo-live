@@ -1,1 +1,94 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Nivo Registratie</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>BLE Tag Registreren</h2>
+
+  <label>Tag ID</label>
+  <input id="tag_id" placeholder="Bijv. A4:C1:22:FF:10:9B">
+
+  <label>Duif naam</label>
+  <input id="duif" placeholder="Bijv. 23-1234567">
+
+  <label>Eigenaar</label>
+  <input id="eigenaar" placeholder="Bijv. Edwin">
+
+  <label>Hok</label>
+  <input id="hok" placeholder="Bijv. Noordhok">
+
+  <button onclick="registerTag()">Registreren</button>
+
+  <div id="result"></div>
+
+  <script>
+    const API_URL = "https://nivo-backend.onrender.com/api/register";
+
+    async function registerTag() {
+      const tag_id = document.getElementById("tag_id").value.trim();
+      const duif = document.getElementById("duif").value.trim();
+      const eigenaar = document.getElementById("eigenaar").value.trim();
+      const hok = document.getElementById("hok").value.trim();
+
+      if (!tag_id || !duif || !eigenaar || !hok) {
+        document.getElementById("result").innerText = "Alle velden invullen!";
+        return;
+      }
+
+      const body = {
+        tag_id,
+        duif,
+        eigenaar,
+        hok,
+        verified: true
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (data.status === "registered") {
+          document.getElementById("result").innerText =
+            "✔ Nieuwe tag geregistreerd!";
+        } else if (data.status === "already_registered") {
+          document.getElementById("result").innerText =
+            "ℹ Tag bestaat al (" + data.tag.duif + ")";
+        } else {
+          document.getElementById("result").innerText =
+            "Onbekende fout";
+        }
+      } catch (err) {
+        document.getElementById("result").innerText =
+          "Fout bij verbinden met server";
+      }
+    }
+  </script>
+</body>
+</html>
