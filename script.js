@@ -1,4 +1,4 @@
-// script.js
+// script.js 
 import { getLiveData } from "./api.js";
 
 const map = L.map("map").setView([53.165, 6.776], 14);
