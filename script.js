@@ -1,12 +1,24 @@
-// script.js
-import { getLiveData } from "./api.js";
-// --- DUMMY MARKERS OM TE TESTEN ---
+// ------------------------------------------------------
+//  DUMMY MARKERS (tijdelijk om de kaart te testen)
+// ------------------------------------------------------
 const dummyData = [
-    { id: "DUIF-001",   lat: 53.165,   lon: 6.776,    rssi: -55    },
-    { id: "DUIF-002",   lat: 53.167,   lon: 6.780,    rssi: -72.   }
+    {
+        id: "DUIF-001",
+        lat: 53.165,
+        lon: 6.776,
+        rssi: -55
+    },
+    {
+        id: "DUIF-002",
+        lat: 53.167,
+        lon: 6.780,
+        rssi: -72
+    }
 ];
-// -----------------------------------
 
+// ------------------------------------------------------
+//  KAART INITIALISEREN
+// ------------------------------------------------------
 const map = L.map("map").setView([53.165, 6.776], 14);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -15,6 +27,9 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markers = {};
 
+// ------------------------------------------------------
+//  MARKERS TEKENEN
+// ------------------------------------------------------
 function updateMarkers(liveData) {
     liveData.forEach(bird => {
         const { id, lat, lon, rssi } = bird;
@@ -44,14 +59,13 @@ function updateMarkers(liveData) {
     });
 }
 
-async function pollLive() {
-    try {
-     const data = await getLiveData();
-        updateMarkers(dummydata);
-    } catch (err) {
-        console.error("Live poll error:", err);
-    }
-}
+// ------------------------------------------------------
+//  DUMMY MARKERS TONEN
+// ------------------------------------------------------
+updateMarkers(dummyData);
 
-setInterval(pollLive, 2000);
-pollLive();
+// ------------------------------------------------------
+//  LIVE POLLING UITGESCHAKELD
+// ------------------------------------------------------
+// setInterval(pollLive, 2000);
+// pollLive();
