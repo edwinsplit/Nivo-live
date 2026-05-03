@@ -1,5 +1,21 @@
 // script.js
 import { getLiveData } from "./api.js";
+// --- DUMMY MARKERS OM TE TESTEN ---
+const dummyData = [
+    {
+        id: "DUIF-001",
+        lat: 53.165,
+        lon: 6.776,
+        rssi: -55
+    },
+    {
+        id: "DUIF-002",
+        lat: 53.167,
+        lon: 6.780,
+        rssi: -72
+    }
+];
+// -----------------------------------
 
 const map = L.map("map").setView([53.165, 6.776], 14);
 
