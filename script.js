@@ -31,6 +31,8 @@ const markers = {};
 //  MARKERS TEKENEN
 // ------------------------------------------------------
 function updateMarkers(liveData) {
+    console.log("Teken markers:", liveData); // <-- DEBUG
+
     liveData.forEach(bird => {
         const { id, lat, lon, rssi } = bird;
 
@@ -42,8 +44,8 @@ function updateMarkers(liveData) {
         const icon = L.divIcon({
             className: "custom-marker",
             html: `<div style="
-                width:18px;
-                height:18px;
+                width:20px;
+                height:20px;
                 background:${color};
                 border-radius:50%;
                 border:2px solid white;
@@ -63,9 +65,3 @@ function updateMarkers(liveData) {
 //  DUMMY MARKERS TONEN
 // ------------------------------------------------------
 updateMarkers(dummyData);
-
-// ------------------------------------------------------
-//  LIVE POLLING UITGESCHAKELD
-// ------------------------------------------------------
-// setInterval(pollLive, 2000);
-// pollLive();
