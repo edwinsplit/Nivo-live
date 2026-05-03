@@ -46,8 +46,8 @@ function updateMarkers(liveData) {
 
 async function pollLive() {
     try {
-        const data = await getLiveData();
-        updateMarkers(data);
+     //   const data = await getLiveData();
+        updateMarkers(dummydata);
     } catch (err) {
         console.error("Live poll error:", err);
     }
