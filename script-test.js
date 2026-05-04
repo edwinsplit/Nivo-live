@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-//  TIJDSTEMPEL BIJWERKEN
+//  TIJDSTEMPEL BIJWERKEN test
 // ------------------------------------------------------
 function updateTimestamp() {
     const el = document.getElementById("last-update");
