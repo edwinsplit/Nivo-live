@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-//  DUMMY MARKERS (tijdelijk om de kaart te testen)
+//  DUMMY MARKERS (blijven altijd zichtbaar)
 // ------------------------------------------------------
 const dummyData = [
     {
@@ -25,15 +25,15 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
 }).addTo(map);
 
-const markers = {};
+const markers = {}; // opslag voor alle markers (dummy + BLE)
 
 // ------------------------------------------------------
 //  MARKERS TEKENEN
 // ------------------------------------------------------
-function updateMarkers(liveData) {
-    console.log("Teken markers:", liveData); // <-- DEBUG
+function updateMarkers(data) {
+    console.log("Teken markers:", data);
 
-    liveData.forEach(bird => {
+    data.forEach(bird => {
         const { id, lat, lon, rssi } = bird;
 
         const color =
@@ -62,6 +62,26 @@ function updateMarkers(liveData) {
 }
 
 // ------------------------------------------------------
-//  DUMMY MARKERS TONEN
+//  DUMMY MARKERS TONEN (ALTIJD)
 // ------------------------------------------------------
 updateMarkers(dummyData);
+
+// ------------------------------------------------------
+//  BLE LIVE DATA (UITGESCHAKELD, KLAAR VOOR GEBRUIK)
+// ------------------------------------------------------
+async function pollLive() {
+    try {
+        const response = await fetch("https://JOUW-BACKEND-URL/api/live");
+        const liveData = await response.json();
+
+        console.log("BLE data:", liveData);
+
+        updateMarkers(liveData);
+    } catch (err) {
+        console.log("BLE fout:", err);
+    }
+}
+
+// Polling UIT — pas aan zodra backend werkt
+// setInterval(pollLive, 2000);
+// pollLive();
