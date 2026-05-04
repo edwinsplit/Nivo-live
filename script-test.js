@@ -1,4 +1,14 @@
 // ------------------------------------------------------
+//  TIJDSTEMPEL BIJWERKEN
+// ------------------------------------------------------
+function updateTimestamp() {
+    const el = document.getElementById("last-update");
+    const now = new Date();
+    const tijd = now.toLocaleTimeString("nl-NL", { hour12: false });
+    el.textContent = "Laatst bijgewerkt: " + tijd;
+}
+
+// ------------------------------------------------------
 //  DUMMY MARKERS (blijven altijd zichtbaar)
 // ------------------------------------------------------
 const dummyData = [
@@ -59,6 +69,9 @@ function updateMarkers(data) {
             markers[id].setIcon(icon);
         }
     });
+
+    // Tijd bijwerken
+    updateTimestamp();
 }
 
 // ------------------------------------------------------
@@ -86,4 +99,3 @@ async function pollLive() {
 // Polling AAN — elke 2 seconden
 setInterval(pollLive, 2000);
 pollLive();
-
