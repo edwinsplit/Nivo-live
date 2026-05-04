@@ -67,21 +67,23 @@ function updateMarkers(data) {
 updateMarkers(dummyData);
 
 // ------------------------------------------------------
-//  BLE LIVE DATA (UITGESCHAKELD, KLAAR VOOR GEBRUIK)
+//  BLE LIVE DATA (AAN)
 // ------------------------------------------------------
 async function pollLive() {
     try {
-        const response = await fetch("https://JOUW-BACKEND-URL/api/live");
+        const response = await fetch("https://nivo-backend-production.up.railway.app/api/live");
         const liveData = await response.json();
 
         console.log("BLE data:", liveData);
 
+        // BLE markers toevoegen
         updateMarkers(liveData);
     } catch (err) {
         console.log("BLE fout:", err);
     }
 }
 
-// Polling UIT — pas aan zodra backend werkt
-// setInterval(pollLive, 2000);
-// pollLive();
+// Polling AAN — elke 2 seconden
+setInterval(pollLive, 2000);
+pollLive();
+
